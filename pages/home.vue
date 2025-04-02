@@ -53,7 +53,7 @@ async function logOut() {
       <div
         class="w-120 outline-1 outline-neutral-300 rounded-md bg-white drop-shadow-md p-8 flex flex-col gap-4"
       >
-        <h1 class="text-2xl font-bold overflow-hidden">Your Hi-scores</h1>
+        <h1 class="text-2xl font-bold overflow-hidden">Your Scores</h1>
         <div>
           <personalLeaderboard :uid="user.uid" />
         </div>

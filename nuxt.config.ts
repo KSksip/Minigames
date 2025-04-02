@@ -7,6 +7,9 @@ export default defineNuxtConfig({
   modules: ['nuxt-auth-utils', '@nuxt/icon'],
   css: ['~/assets/css/main.css'],
   ssr: false,
+  runtimeConfig: {
+    protectedRoutes: ['/home', '/games/']
+  },
   vite: {
     plugins: [
       tailwindcss(),

@@ -8,5 +8,5 @@ export default eventHandler(async () => {
     INNER JOIN Game ON Game.idGame = Leaderboard.idGame 
     WHERE idUser = ?`);
     
-  return data.all(2)
+    return data.all(2)
 })

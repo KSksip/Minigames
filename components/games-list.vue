@@ -4,7 +4,7 @@ const { data, status, error, refresh, clear } = await useFetch("/api/gameslist")
 
 <template>
   <NuxtLink
-    to="/snake"
+    :to="`/games/${game.Name.toLowerCase()}`"
     v-for="game in data"
     class="outline outline-neutral-300 p-2 rounded-sm w-50 h-30 flex flex-col hover:bg-neutral-300 hover:cursor-pointer"
   >

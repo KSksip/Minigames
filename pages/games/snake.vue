@@ -21,7 +21,7 @@ function randInt(max: number) {
   return Math.floor(Math.random() * max);
 }
 
-let snake = reactive({
+const snake = ref({
   head: {
     direction: 1,
     position: 108,
@@ -33,36 +33,35 @@ let snake = reactive({
 
 function move(tiles: number) {
   let collisionAdjustement = 0;
-  if (snake.head.position % 15) {
+  if (snake.value.head.position % 15) {
     collisionAdjustement = 1;
   } else {
     collisionAdjustement = 0;
   }
 
   if (
-    !snake.body.includes(snake.head.position + tiles) &&
-    snake.head.position % 15 != collisionAdjustement &&
-    snake.head.position + tiles > 0 &&
-    snake.head.position + tiles < 225
+    !snake.value.body.includes(snake.value.head.position + tiles) &&
+    snake.value.head.position % 15 != collisionAdjustement &&
+    snake.value.head.position + tiles > 0 &&
+    snake.value.head.position + tiles < 225
   ) {
-    snake.head.position += tiles;
-    snake.body.shift();
-    snake.body.push(snake.head.position);
-    if (snake.head.position == snake.apple) {
-      snake.body.push(snake.apple);
-      snake.apple = randInt(225);
-      snake.score++;
+    snake.value.head.position += tiles;
+    snake.value.body.shift();
+    snake.value.body.push(snake.value.head.position);
+    if (snake.value.head.position == snake.value.apple) {
+      snake.value.body.push(snake.value.apple);
+      snake.value.apple = randInt(225);
+      snake.value.score++;
     }
   } else {
-    clearInterval(intervalId);
     gameOver.value = true;
     uploadScore();
   }
 }
 
 function turn(direction: number) {
-  if (!snake.body.includes(direction + snake.head.position)) {
-    snake.head.direction = direction;
+  if (!snake.value.body.includes(direction + snake.value.head.position)) {
+    snake.value.head.direction = direction;
   }
 }
 
@@ -71,17 +70,31 @@ async function uploadScore() {
     method: "POST",
     body: {
       uId: user.value.uid,
-      score: snake.score,
+      score: snake.value.score,
       gId: 1,
     },
   });
 }
 
 const intervalId = setInterval(function () {
-  if (!paused.value) {
-    move(snake.head.direction);
+  if (!paused.value && !gameOver.value) {
+    move(snake.value.head.direction);
   }
 }, 400);
+
+function playAgain() {
+  snake.value = {
+    head: {
+      direction: 1,
+      position: 108,
+    },
+    body: [106, 107, 108],
+    apple: 113,
+    score: 0,
+  };
+
+  gameOver.value = false;
+}
 
 intervalId;
 </script>
@@ -128,16 +141,22 @@ intervalId;
   </div>
   <div
     v-if="gameOver"
-    class="fixed top-1/2 left-1/2 -translate-1/2 outline-1 outline-neutral-300 rounded-xl p-3 bg-white size-50"
+    class="fixed top-1/2 left-1/2 -translate-1/2 outline-1 outline-neutral-300 rounded-xl p-3 bg-white w-50 h-fit"
   >
-    <div class="opacity-140 flex flex-col gap-2 justify-between h-full p-5">
+    <div class="opacity-140 flex flex-col gap-2 justify-between h-fit p-5">
       <span class="text-3xl font-black text-neutral-700 mx-auto">You lost!</span>
       <span class="text-5xl font-black text-neutral-700 mx-auto">{{ snake.score }}</span>
       <button
-        class="bg-green-500 rounded-md text-white font-bold text-lg size-fit px-3 py-1 mx-auto"
+        @click="playAgain"
+        class="bg-green-500 rounded-md text-white font-bold text-lg size-fit px-3 py-1 mx-auto hover:cursor-pointer"
       >
         Play Again!
       </button>
+      <NuxtLink
+        class="bg-gray-500 rounded-md text-white font-bold text-lg size-fit px-3 py-1 mx-auto hover:cursor-pointer"
+        to="/home"
+        >Home</NuxtLink
+      >
     </div>
   </div>
 </template>

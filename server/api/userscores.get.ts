@@ -15,8 +15,11 @@ export default eventHandler(async (event) => {
             WHERE idUser = ?
             AND
             Game.idGame = ?
+            ORDER BY Score Desc
+            limit ?
+            offset ?
         `);
-        return data.all(query.uid, query.gid)
+        return data.all(query.uid, query.gid, query.scoresPerPage, Number(query.page)! - 1)
 
     } else if(query.gid){
         const data = db.prepare(`
@@ -24,8 +27,11 @@ export default eventHandler(async (event) => {
             FROM Leaderboard 
             INNER JOIN Game ON Game.idGame = Leaderboard.idGame 
             WHERE Game.idGame = ?
+            ORDER BY Score Desc
+            limit ?
+            offset ?
         `);
-        return data.all(query.gid)
+        return data.all(query.gid, query.scoresPerPage, Number(query.page)! - 1)
 
     } else {
         const data = db.prepare(`
@@ -33,7 +39,10 @@ export default eventHandler(async (event) => {
             FROM Leaderboard 
             INNER JOIN Game ON Game.idGame = Leaderboard.idGame 
             WHERE idUser = ?
+            ORDER BY Score Desc
+            limit ?
+            offset ?
         `);
-        return data.all(query.uid)
+        return data.all(query.uid, query.scoresPerPage, Number(query.page)! - 1)
     }
 })

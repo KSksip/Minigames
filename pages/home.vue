@@ -31,12 +31,12 @@ async function logOut() {
         </div>
 
         <div class="flex gap-2">
-          <button
+          <NuxtLink
+            to="/user/settings"
             class="hover:cursor-pointer hover:text-gray-500 translate-y-1 p-2"
-            @click=""
           >
             <Icon name="i-heroicons-cog-6-tooth-solid" class="scale-175"></Icon>
-          </button>
+          </NuxtLink>
 
           <button
             class="hover:cursor-pointer hover:text-red-500 translate-y-1 p-2"

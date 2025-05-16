@@ -10,11 +10,16 @@ const bodySchema = z.object({
 export default eventHandler(async (event) => {
 
     const { uId, gId, score } = await readValidatedBody(event, bodySchema.parse)
+    const { user } = await requireUserSession(event)
 
-    const sql = db.prepare(`
-        INSERT INTO Leaderboard (idUser, idGame, Score, Timestamp) 
-        VALUES (?, ?, ?, current_timestamp)
+    if(user.id == uId){
+        const sql = db.prepare(`
+            INSERT INTO Leaderboard (idUser, idGame, Score, Timestamp) 
+            VALUES (?, ?, ?, current_timestamp)
         `);
 
-    sql.run(uId, gId, score)
+        sql.run(uId, gId, score)    
+    } else {
+        return null
+    }
 })

@@ -10,7 +10,7 @@ interface Data {
 }
 
 const { data, status, error, refresh, clear } = await useFetch(
-  `/api/userscores?uid=${props.uid}`
+  `/api/userscores?uid=${props.uid}&scoresPerPage=5&page=1`
 );
 </script>
 
